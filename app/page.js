@@ -23,9 +23,13 @@ export default function Home() {
     const food = dailyCost * 0.25 * days;
     const transport = dailyCost * 0.15 * days;
     const activities = dailyCost * 0.15 * days;
+
     const total = Math.round(
       (hotel + food + transport + activities) * travelers
     );
+
+    const maxBudget = budget ? Number(budget) : null;
+    const difference = maxBudget ? total - maxBudget : null;
 
     setResult({
       total,
@@ -33,24 +37,46 @@ export default function Home() {
       food: Math.round(food * travelers),
       transport: Math.round(transport * travelers),
       activities: Math.round(activities * travelers),
+      maxBudget,
+      difference,
     });
+  }
+
+  function resetTrip() {
+    setResult(null);
+    setDestination("");
+    setBudget("");
   }
 
   return (
     <main className="container">
       <section className="hero">
-        <p className="tag">AI TRIP PLANNER</p>
-        <h1>Plan your next trip.</h1>
+        <div className="hero-badge">✈️ SMART TRIP PLANNER</div>
+
+        <h1>
+          Plan your trip.
+          <br />
+          <span>Know your budget.</span>
+        </h1>
+
         <p className="subtitle">
-          Estimate your travel budget and build a simple itinerary.
+          Build a simple travel plan and estimate your trip cost in seconds.
         </p>
       </section>
 
-      <section className="card">
+      <section className="card planner-card">
+        <div className="section-title">
+          <div>
+            <h2>Start planning</h2>
+            <p>Tell us a little about your trip.</p>
+          </div>
+        </div>
+
         <label>Where do you want to go?</label>
+
         <input
           type="text"
-          placeholder="e.g. Tokyo"
+          placeholder="e.g. Tokyo, Paris, Seoul..."
           value={destination}
           onChange={(e) => setDestination(e.target.value)}
         />
@@ -61,6 +87,7 @@ export default function Home() {
             <input
               type="number"
               min="1"
+              max="60"
               value={days}
               onChange={(e) => setDays(Number(e.target.value))}
             />
@@ -71,6 +98,7 @@ export default function Home() {
             <input
               type="number"
               min="1"
+              max="20"
               value={travelers}
               onChange={(e) => setTravelers(Number(e.target.value))}
             />
@@ -78,49 +106,174 @@ export default function Home() {
         </div>
 
         <label>Travel style</label>
-        <select value={style} onChange={(e) => setStyle(e.target.value)}>
-          <option>Budget</option>
-          <option>Mid-range</option>
-          <option>Luxury</option>
-        </select>
 
-        <label>Maximum budget (optional)</label>
-        <input
-          type="number"
-          placeholder="e.g. 2000"
-          value={budget}
-          onChange={(e) => setBudget(e.target.value)}
-        />
+        <div className="style-options">
+          {["Budget", "Mid-range", "Luxury"].map((option) => (
+            <button
+              key={option}
+              type="button"
+              className={`style-button ${
+                style === option ? "active" : ""
+              }`}
+              onClick={() => setStyle(option)}
+            >
+              {option === "Budget" && "💰"}
+              {option === "Mid-range" && "✨"}
+              {option === "Luxury" && "💎"}
+              <span>{option}</span>
+            </button>
+          ))}
+        </div>
 
-        <button onClick={createTrip}>Create My Trip</button>
+        <label>Maximum budget</label>
+
+        <div className="budget-input">
+          <span>$</span>
+          <input
+            type="number"
+            min="0"
+            placeholder="Optional"
+            value={budget}
+            onChange={(e) => setBudget(e.target.value)}
+          />
+        </div>
+
+        <button className="primary-button" onClick={createTrip}>
+          Create My Trip →
+        </button>
+
+        <p className="privacy-note">
+          No account required · Free to use
+        </p>
       </section>
 
       {result && (
-        <section className="result card">
-          <p className="tag">YOUR ESTIMATE</p>
-          <h2>
-            {destination} — {days} days
-          </h2>
+        <section className="result-card">
+          <div className="result-header">
+            <div>
+              <div className="result-label">YOUR TRIP ESTIMATE</div>
 
-          <div className="total">
-            ${result.total.toLocaleString()}
+              <h2>
+                {destination}
+              </h2>
+
+              <p>
+                {days} days · {travelers}{" "}
+                {travelers === 1 ? "traveler" : "travelers"} · {style}
+              </p>
+            </div>
+
+            <div className="total-box">
+              <span>Estimated total</span>
+              <strong>${result.total.toLocaleString()}</strong>
+            </div>
           </div>
 
-          <div className="breakdown">
-            <p>🏨 Hotel: ${result.hotel.toLocaleString()}</p>
-            <p>🍜 Food: ${result.food.toLocaleString()}</p>
-            <p>🚆 Transport: ${result.transport.toLocaleString()}</p>
-            <p>🎟️ Activities: ${result.activities.toLocaleString()}</p>
+          {result.maxBudget && (
+            <div
+              className={`budget-status ${
+                result.difference > 0 ? "over" : "under"
+              }`}
+            >
+              {result.difference > 0 ? (
+                <>
+                  ⚠️ This trip is about{" "}
+                  <strong>
+                    ${result.difference.toLocaleString()}
+                  </strong>{" "}
+                  over your budget.
+                </>
+              ) : (
+                <>
+                  ✓ You are about{" "}
+                  <strong>
+                    ${Math.abs(result.difference).toLocaleString()}
+                  </strong>{" "}
+                  under your budget.
+                </>
+              )}
+            </div>
+          )}
+
+          <div className="breakdown-grid">
+            <div className="breakdown-item">
+              <span>🏨</span>
+              <div>
+                <small>Hotels</small>
+                <strong>${result.hotel.toLocaleString()}</strong>
+              </div>
+            </div>
+
+            <div className="breakdown-item">
+              <span>🍜</span>
+              <div>
+                <small>Food</small>
+                <strong>${result.food.toLocaleString()}</strong>
+              </div>
+            </div>
+
+            <div className="breakdown-item">
+              <span>🚆</span>
+              <div>
+                <small>Transport</small>
+                <strong>${result.transport.toLocaleString()}</strong>
+              </div>
+            </div>
+
+            <div className="breakdown-item">
+              <span>🎟️</span>
+              <div>
+                <small>Activities</small>
+                <strong>${result.activities.toLocaleString()}</strong>
+              </div>
+            </div>
           </div>
 
-          <h3>Suggested itinerary</h3>
-          <ul>
-            <li>Day 1 — Arrival and explore the city center</li>
-            <li>Day 2 — Major attractions and local food</li>
-            <li>Day 3 — Culture, shopping and neighborhoods</li>
-            <li>Day 4 — Day trip or special activity</li>
-            <li>Day 5 — Relax and departure</li>
-          </ul>
+          <div className="itinerary">
+            <div className="itinerary-heading">
+              <div>
+                <div className="result-label">SAMPLE ITINERARY</div>
+                <h3>Your {days}-day trip</h3>
+              </div>
+            </div>
+
+            <div className="day">
+              <strong>Day 1</strong>
+              <p>Arrival and explore the city center</p>
+            </div>
+
+            <div className="day">
+              <strong>Day 2</strong>
+              <p>Major attractions and local food</p>
+            </div>
+
+            <div className="day">
+              <strong>Day 3</strong>
+              <p>Culture, shopping and local neighborhoods</p>
+            </div>
+
+            {days >= 4 && (
+              <div className="day">
+                <strong>Day 4</strong>
+                <p>Day trip or special local experience</p>
+              </div>
+            )}
+
+            {days >= 5 && (
+              <div className="day">
+                <strong>Day 5+</strong>
+                <p>Relax, explore more and prepare for departure</p>
+              </div>
+            )}
+          </div>
+
+          <div className="future-note">
+            🚀 Soon: hotels, flights, activities, eSIMs and travel insurance.
+          </div>
+
+          <button className="secondary-button" onClick={resetTrip}>
+            ← Plan another trip
+          </button>
         </section>
       )}
     </main>
