@@ -7,26 +7,43 @@ export default function TokyoTripCost() {
   const [travelers, setTravelers] = useState(2);
   const [style, setStyle] = useState("Mid-range");
 
-  const dailyCost =
-    style === "Budget"
-      ? 85
-      : style === "Luxury"
-      ? 300
-      : 160;
+  let dailyCost = 160;
 
-  const hotel = dailyCost * 0.45 * days * travelers;
-  const food = dailyCost * 0.25 * days * travelers;
-  const transport = dailyCost * 0.15 * days * travelers;
-  const activities = dailyCost * 0.15 * days * travelers;
+  if (style === "Budget") {
+    dailyCost = 85;
+  }
 
-  const total = Math.round(
-    hotel + food + transport + activities
+  if (style === "Luxury") {
+    dailyCost = 300;
+  }
+
+  const hotel = Math.round(
+    dailyCost * 0.45 * days * travelers
   );
+
+  const food = Math.round(
+    dailyCost * 0.25 * days * travelers
+  );
+
+  const transport = Math.round(
+    dailyCost * 0.15 * days * travelers
+  );
+
+  const activities = Math.round(
+    dailyCost * 0.15 * days * travelers
+  );
+
+  const total =
+    hotel +
+    food +
+    transport +
+    activities;
 
   return (
     <main className="container">
 
       <section className="hero">
+
         <div className="hero-badge">
           🇯🇵 TOKYO TRIP PLANNER
         </div>
@@ -39,23 +56,36 @@ export default function TokyoTripCost() {
 
         <p className="subtitle">
           Estimate your Tokyo travel budget based on
-          your trip length, number of travelers and travel style.
+          your trip length, number of travelers and
+          travel style.
         </p>
+
       </section>
+
 
       <section className="card planner-card">
 
         <div className="section-title">
-          <h2>Tokyo trip cost calculator</h2>
+
+          <h2>
+            Tokyo trip cost calculator
+          </h2>
+
           <p>
-            Adjust your trip details to see an estimated budget.
+            Adjust your trip details to see an
+            estimated budget.
           </p>
+
         </div>
+
 
         <div className="grid">
 
           <div>
-            <label>Number of days</label>
+
+            <label>
+              Number of days
+            </label>
 
             <input
               type="number"
@@ -66,10 +96,15 @@ export default function TokyoTripCost() {
                 setDays(Number(e.target.value))
               }
             />
+
           </div>
 
+
           <div>
-            <label>Travelers</label>
+
+            <label>
+              Travelers
+            </label>
 
             <input
               type="number"
@@ -80,40 +115,61 @@ export default function TokyoTripCost() {
                 setTravelers(Number(e.target.value))
               }
             />
+
           </div>
 
         </div>
 
-        <label>Travel style</label>
+
+        <label>
+          Travel style
+        </label>
+
 
         <div className="style-options">
 
-          {["Budget", "Mid-range", "Luxury"].map(
-            (option) => (
+          <button
+            type="button"
+            className={
+              style === "Budget"
+                ? "style-button active"
+                : "style-button"
+            }
+            onClick={() => setStyle("Budget")}
+          >
+            💰 <span>Budget</span>
+          </button>
 
-              <button
-                key={option}
-                type="button"
-                className={`style-button ${
-                  style === option ? "active" : ""
-                }`}
-                onClick={() => setStyle(option)}
-              >
 
-                {option === "Budget" && "💰"}
-                {option === "Mid-range" && "✨"}
-                {option === "Luxury" && "💎"}
+          <button
+            type="button"
+            className={
+              style === "Mid-range"
+                ? "style-button active"
+                : "style-button"
+            }
+            onClick={() => setStyle("Mid-range")}
+          >
+            ✨ <span>Mid-range</span>
+          </button>
 
-                <span>{option}</span>
 
-              </button>
-
-            )
-          )}
+          <button
+            type="button"
+            className={
+              style === "Luxury"
+                ? "style-button active"
+                : "style-button"
+            }
+            onClick={() => setStyle("Luxury")}
+          >
+            💎 <span>Luxury</span>
+          </button>
 
         </div>
 
       </section>
+
 
       <section className="result-card">
 
@@ -139,9 +195,12 @@ export default function TokyoTripCost() {
 
           </div>
 
+
           <div className="total-box">
 
-            <span>Estimated total</span>
+            <span>
+              Estimated total
+            </span>
 
             <strong>
               ${total.toLocaleString()}
@@ -151,154 +210,175 @@ export default function TokyoTripCost() {
 
         </div>
 
+
         <div className="breakdown-grid">
 
           <div className="breakdown-item">
+
             <span>🏨</span>
 
             <div>
-              <small>Hotels</small>
+
+              <small>
+                Hotels
+              </small>
+
               <strong>
-                ${Math.round(hotel).toLocaleString()}
+                ${hotel.toLocaleString()}
               </strong>
+
             </div>
+
           </div>
 
+
           <div className="breakdown-item">
+
             <span>🍜</span>
 
             <div>
-              <small>Food</small>
+
+              <small>
+                Food
+              </small>
+
               <strong>
-                ${Math.round(food).toLocaleString()}
+                ${food.toLocaleString()}
               </strong>
+
             </div>
+
           </div>
 
+
           <div className="breakdown-item">
+
             <span>🚆</span>
 
             <div>
-              <small>Transport</small>
+
+              <small>
+                Transport
+              </small>
+
               <strong>
-                ${Math.round(transport).toLocaleString()}
+                ${transport.toLocaleString()}
               </strong>
+
             </div>
+
           </div>
 
+
           <div className="breakdown-item">
+
             <span>🎟️</span>
 
             <div>
-              <small>Activities</small>
+
+              <small>
+                Activities
+              </small>
+
               <strong>
-                ${Math.round(activities).toLocaleString()}
+                ${activities.toLocaleString()}
               </strong>
+
             </div>
+
           </div>
 
         </div>
+
 
         <div className="itinerary">
 
-          <div className="itinerary-heading">
-
-            <div className="result-label">
-              SAMPLE ITINERARY
-            </div>
-
-            <h3>
-              Suggested Tokyo itinerary
-            </h3>
-
+          <div className="result-label">
+            SAMPLE ITINERARY
           </div>
+
+          <h3>
+            Suggested Tokyo itinerary
+          </h3>
+
 
           <div className="day">
-            <strong>Day 1</strong>
+
+            <strong>
+              Day 1
+            </strong>
+
             <p>
-              Arrival, Shibuya and Shibuya Crossing
+              Arrival, Shibuya and
+              Shibuya Crossing
             </p>
+
           </div>
 
-          <div className="day">
-            <strong>Day 2</strong>
-            <p>
-              Asakusa, Senso-ji and Tokyo Skytree
-            </p>
-          </div>
 
           <div className="day">
-            <strong>Day 3</strong>
+
+            <strong>
+              Day 2
+            </strong>
+
             <p>
-              Harajuku, Meiji Shrine and Shinjuku
+              Asakusa, Senso-ji and
+              Tokyo Skytree
             </p>
+
           </div>
+
+
+          <div className="day">
+
+            <strong>
+              Day 3
+            </strong>
+
+            <p>
+              Harajuku, Meiji Shrine
+              and Shinjuku
+            </p>
+
+          </div>
+
 
           {days >= 4 && (
+
             <div className="day">
-              <strong>Day 4</strong>
+
+              <strong>
+                Day 4
+              </strong>
+
               <p>
-                Tsukiji, Ginza and Tokyo neighborhoods
+                Tsukiji, Ginza and
+                Tokyo neighborhoods
               </p>
+
             </div>
+
           )}
+
 
           {days >= 5 && (
+
             <div className="day">
-              <strong>Day 5+</strong>
+
+              <strong>
+                Day 5+
+              </strong>
+
               <p>
-                Day trip, shopping or additional Tokyo experiences
+                Day trip, shopping and
+                local experiences
               </p>
+
             </div>
+
           )}
 
-        </div>
-
-      </section>
-
-      <section className="card" style={{ marginTop: "30px" }}>
-
-        <div className="section-title">
-
-          <h2>What does a Tokyo trip include?</h2>
-
-          <p>
-            Your travel budget usually depends on several
-            major expenses.
-          </p>
-
-        </div>
-
-        <div className="day">
-          <strong>Hotels</strong>
-          <p>
-            Your accommodation is usually one of the
-            largest parts of a Tokyo travel budget.
-          </p>
-        </div>
-
-        <div className="day">
-          <strong>Food</strong>
-          <p>
-            Tokyo offers options ranging from inexpensive
-            local meals to high-end restaurants.
-          </p>
-        </div>
-
-        <div className="day">
-          <strong>Transport</strong>
-          <p>
-            Trains, subway and local transportation are
-            important parts of planning a Tokyo trip.
-          </p>
-        </div>
-
-        <div className="day">
-          <strong>Activities</strong>
-          <p>
-            Attractions, museums, tours and experiences
-            can change your overall budget.
-          </p>
         </div>
 
       </section>
