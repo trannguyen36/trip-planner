@@ -1,115 +1,72 @@
 "use client";
 
 import { useState } from "react";
-
-const destinations = {
-  Tokyo: {
-    country: "Japan",
-    daily: {
-      Budget: 85,
-      "Mid-range": 160,
-      Luxury: 300,
-    },
-  },
-
-  Seoul: {
-    country: "South Korea",
-    daily: {
-      Budget: 70,
-      "Mid-range": 130,
-      Luxury: 260,
-    },
-  },
-
-  Bangkok: {
-    country: "Thailand",
-    daily: {
-      Budget: 45,
-      "Mid-range": 90,
-      Luxury: 200,
-    },
-  },
-
-  Singapore: {
-    country: "Singapore",
-    daily: {
-      Budget: 90,
-      "Mid-range": 170,
-      Luxury: 350,
-    },
-  },
-
-  Paris: {
-    country: "France",
-    daily: {
-      Budget: 100,
-      "Mid-range": 190,
-      Luxury: 380,
-    },
-  },
-
-  London: {
-    country: "United Kingdom",
-    daily: {
-      Budget: 110,
-      "Mid-range": 210,
-      Luxury: 420,
-    },
-  },
-
-  Sydney: {
-    country: "Australia",
-    daily: {
-      Budget: 100,
-      "Mid-range": 190,
-      Luxury: 380,
-    },
-  },
-
-  Vancouver: {
-    country: "Canada",
-    daily: {
-      Budget: 95,
-      "Mid-range": 180,
-      Luxury: 360,
-    },
-  },
-
-  Toronto: {
-    country: "Canada",
-    daily: {
-      Budget: 95,
-      "Mid-range": 180,
-      Luxury: 350,
-    },
-  },
-};
+import { destinations } from "./data/destinations";
 
 export default function Home() {
-  const [destination, setDestination] = useState("");
+  const countries = [
+    ...new Set(destinations.map((item) => item.country)),
+  ];
+
+  const [country, setCountry] = useState("");
+  const [city, setCity] = useState("");
   const [days, setDays] = useState(5);
   const [travelers, setTravelers] = useState(2);
   const [style, setStyle] = useState("Mid-range");
   const [budget, setBudget] = useState("");
   const [result, setResult] = useState(null);
 
+  const cities = destinations.filter(
+    (item) => item.country === country
+  );
+
+  function handleCountryChange(value) {
+    setCountry(value);
+    setCity("");
+    setResult(null);
+  }
+
   function createTrip() {
-    if (!destination) {
-      alert("Please select a destination.");
+    if (!country) {
+      alert("Please select a country.");
       return;
     }
 
-    const destinationData = destinations[destination];
+    if (!city) {
+      alert("Please select a city.");
+      return;
+    }
 
-    const dailyCost = destinationData.daily[style];
+    const destination = destinations.find(
+      (item) =>
+        item.country === country &&
+        item.city === city
+    );
 
-    const hotel = dailyCost * 0.45 * days * travelers;
-    const food = dailyCost * 0.25 * days * travelers;
-    const transport = dailyCost * 0.15 * days * travelers;
-    const activities = dailyCost * 0.15 * days * travelers;
+    if (!destination) {
+      alert("Destination not found.");
+      return;
+    }
+
+    const dailyCost = destination.daily[style];
+
+    const hotel =
+      dailyCost * 0.45 * days * travelers;
+
+    const food =
+      dailyCost * 0.25 * days * travelers;
+
+    const transport =
+      dailyCost * 0.15 * days * travelers;
+
+    const activities =
+      dailyCost * 0.15 * days * travelers;
 
     const total = Math.round(
-      hotel + food + transport + activities
+      hotel +
+        food +
+        transport +
+        activities
     );
 
     const maxBudget = budget
@@ -121,20 +78,22 @@ export default function Home() {
       : null;
 
     setResult({
+      city: destination.city,
+      country: destination.country,
       total,
       hotel: Math.round(hotel),
       food: Math.round(food),
       transport: Math.round(transport),
       activities: Math.round(activities),
-      difference,
       maxBudget,
-      country: destinationData.country,
+      difference,
     });
   }
 
   function resetTrip() {
     setResult(null);
-    setDestination("");
+    setCountry("");
+    setCity("");
     setBudget("");
   }
 
@@ -181,33 +140,63 @@ export default function Home() {
         </div>
 
 
-        {/* DESTINATION */}
+        {/* COUNTRY */}
 
         <label>
-          Where are you going?
+          Country
         </label>
 
         <select
-          value={destination}
+          value={country}
           onChange={(e) =>
-            setDestination(e.target.value)
+            handleCountryChange(e.target.value)
           }
         >
 
           <option value="">
-            Select a destination
+            Select a country
           </option>
 
-          {Object.keys(destinations).map(
-            (city) => (
-              <option
-                key={city}
-                value={city}
-              >
-                {city}, {destinations[city].country}
-              </option>
-            )
-          )}
+          {countries.map((item) => (
+            <option
+              key={item}
+              value={item}
+            >
+              {item}
+            </option>
+          ))}
+
+        </select>
+
+
+        {/* CITY */}
+
+        <label>
+          City
+        </label>
+
+        <select
+          value={city}
+          onChange={(e) =>
+            setCity(e.target.value)
+          }
+          disabled={!country}
+        >
+
+          <option value="">
+            {country
+              ? "Select a city"
+              : "Select country first"}
+          </option>
+
+          {cities.map((item) => (
+            <option
+              key={item.city}
+              value={item.city}
+            >
+              {item.city}
+            </option>
+          ))}
 
         </select>
 
@@ -368,7 +357,7 @@ export default function Home() {
               </div>
 
               <h2>
-                {destination}
+                {result.city}
               </h2>
 
               <p>
