@@ -4,10 +4,28 @@ export const destinations = [
     countryCode: "JP",
     city: "Tokyo",
     slug: "tokyo",
-    daily: {
-      Budget: 85,
-      "Mid-range": 160,
-      Luxury: 300,
+
+    costs: {
+      Budget: {
+        hotel: 40,
+        food: 25,
+        transport: 10,
+        activities: 10,
+      },
+
+      "Mid-range": {
+        hotel: 70,
+        food: 40,
+        transport: 15,
+        activities: 35,
+      },
+
+      Luxury: {
+        hotel: 150,
+        food: 75,
+        transport: 30,
+        activities: 45,
+      },
     },
   },
 
@@ -16,10 +34,28 @@ export const destinations = [
     countryCode: "JP",
     city: "Osaka",
     slug: "osaka",
-    daily: {
-      Budget: 75,
-      "Mid-range": 140,
-      Luxury: 270,
+
+    costs: {
+      Budget: {
+        hotel: 35,
+        food: 23,
+        transport: 9,
+        activities: 8,
+      },
+
+      "Mid-range": {
+        hotel: 60,
+        food: 35,
+        transport: 13,
+        activities: 32,
+      },
+
+      Luxury: {
+        hotel: 135,
+        food: 70,
+        transport: 28,
+        activities: 42,
+      },
     },
   },
 
@@ -28,10 +64,28 @@ export const destinations = [
     countryCode: "JP",
     city: "Kyoto",
     slug: "kyoto",
-    daily: {
-      Budget: 80,
-      "Mid-range": 150,
-      Luxury: 280,
+
+    costs: {
+      Budget: {
+        hotel: 38,
+        food: 24,
+        transport: 9,
+        activities: 9,
+      },
+
+      "Mid-range": {
+        hotel: 65,
+        food: 38,
+        transport: 14,
+        activities: 33,
+      },
+
+      Luxury: {
+        hotel: 145,
+        food: 75,
+        transport: 28,
+        activities: 45,
+      },
     },
   },
 
@@ -40,10 +94,28 @@ export const destinations = [
     countryCode: "KR",
     city: "Seoul",
     slug: "seoul",
-    daily: {
-      Budget: 70,
-      "Mid-range": 130,
-      Luxury: 260,
+
+    costs: {
+      Budget: {
+        hotel: 35,
+        food: 22,
+        transport: 8,
+        activities: 8,
+      },
+
+      "Mid-range": {
+        hotel: 60,
+        food: 35,
+        transport: 12,
+        activities: 23,
+      },
+
+      Luxury: {
+        hotel: 130,
+        food: 70,
+        transport: 25,
+        activities: 35,
+      },
     },
   },
 
@@ -52,10 +124,28 @@ export const destinations = [
     countryCode: "TH",
     city: "Bangkok",
     slug: "bangkok",
-    daily: {
-      Budget: 45,
-      "Mid-range": 90,
-      Luxury: 200,
+
+    costs: {
+      Budget: {
+        hotel: 25,
+        food: 15,
+        transport: 5,
+        activities: 5,
+      },
+
+      "Mid-range": {
+        hotel: 45,
+        food: 25,
+        transport: 8,
+        activities: 12,
+      },
+
+      Luxury: {
+        hotel: 100,
+        food: 50,
+        transport: 20,
+        activities: 30,
+      },
     },
   },
 
@@ -64,10 +154,28 @@ export const destinations = [
     countryCode: "SG",
     city: "Singapore",
     slug: "singapore",
-    daily: {
-      Budget: 90,
-      "Mid-range": 170,
-      Luxury: 350,
+
+    costs: {
+      Budget: {
+        hotel: 55,
+        food: 25,
+        transport: 8,
+        activities: 8,
+      },
+
+      "Mid-range": {
+        hotel: 90,
+        food: 40,
+        transport: 15,
+        activities: 25,
+      },
+
+      Luxury: {
+        hotel: 190,
+        food: 80,
+        transport: 30,
+        activities: 50,
+      },
     },
   },
 
@@ -76,10 +184,28 @@ export const destinations = [
     countryCode: "FR",
     city: "Paris",
     slug: "paris",
-    daily: {
-      Budget: 100,
-      "Mid-range": 190,
-      Luxury: 380,
+
+    costs: {
+      Budget: {
+        hotel: 60,
+        food: 30,
+        transport: 10,
+        activities: 10,
+      },
+
+      "Mid-range": {
+        hotel: 100,
+        food: 50,
+        transport: 15,
+        activities: 25,
+      },
+
+      Luxury: {
+        hotel: 220,
+        food: 90,
+        transport: 30,
+        activities: 40,
+      },
     },
   },
 
@@ -88,10 +214,28 @@ export const destinations = [
     countryCode: "GB",
     city: "London",
     slug: "london",
-    daily: {
-      Budget: 110,
-      "Mid-range": 210,
-      Luxury: 420,
+
+    costs: {
+      Budget: {
+        hotel: 65,
+        food: 30,
+        transport: 12,
+        activities: 10,
+      },
+
+      "Mid-range": {
+        hotel: 110,
+        food: 55,
+        transport: 18,
+        activities: 30,
+      },
+
+      Luxury: {
+        hotel: 240,
+        food: 100,
+        transport: 35,
+        activities: 45,
+      },
     },
   },
 
@@ -100,10 +244,28 @@ export const destinations = [
     countryCode: "AU",
     city: "Sydney",
     slug: "sydney",
-    daily: {
-      Budget: 100,
-      "Mid-range": 190,
-      Luxury: 380,
+
+    costs: {
+      Budget: {
+        hotel: 60,
+        food: 30,
+        transport: 10,
+        activities: 10,
+      },
+
+      "Mid-range": {
+        hotel: 100,
+        food: 50,
+        transport: 15,
+        activities: 25,
+      },
+
+      Luxury: {
+        hotel: 220,
+        food: 90,
+        transport: 30,
+        activities: 40,
+      },
     },
   },
 
@@ -112,10 +274,28 @@ export const destinations = [
     countryCode: "CA",
     city: "Vancouver",
     slug: "vancouver",
-    daily: {
-      Budget: 95,
-      "Mid-range": 180,
-      Luxury: 360,
+
+    costs: {
+      Budget: {
+        hotel: 60,
+        food: 30,
+        transport: 10,
+        activities: 10,
+      },
+
+      "Mid-range": {
+        hotel: 100,
+        food: 50,
+        transport: 15,
+        activities: 25,
+      },
+
+      Luxury: {
+        hotel: 210,
+        food: 90,
+        transport: 30,
+        activities: 40,
+      },
     },
   },
 
@@ -124,10 +304,28 @@ export const destinations = [
     countryCode: "CA",
     city: "Toronto",
     slug: "toronto",
-    daily: {
-      Budget: 95,
-      "Mid-range": 180,
-      Luxury: 350,
+
+    costs: {
+      Budget: {
+        hotel: 60,
+        food: 30,
+        transport: 10,
+        activities: 10,
+      },
+
+      "Mid-range": {
+        hotel: 95,
+        food: 50,
+        transport: 15,
+        activities: 25,
+      },
+
+      Luxury: {
+        hotel: 200,
+        food: 90,
+        transport: 30,
+        activities: 40,
+      },
     },
   },
 ];
