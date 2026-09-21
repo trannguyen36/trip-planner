@@ -48,19 +48,19 @@ export default function Home() {
       return;
     }
 
-    const dailyCost = destination.daily[style];
+  const costs = destination.costs[style];
 
-    const hotel =
-      dailyCost * 0.45 * days * travelers;
+const hotel =
+  costs.hotel * days * travelers;
 
-    const food =
-      dailyCost * 0.25 * days * travelers;
+const food =
+  costs.food * days * travelers;
 
-    const transport =
-      dailyCost * 0.15 * days * travelers;
+const transport =
+  costs.transport * days * travelers;
 
-    const activities =
-      dailyCost * 0.15 * days * travelers;
+const activities =
+  costs.activities * days * travelers;
 
     const total = Math.round(
       hotel +
