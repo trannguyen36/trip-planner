@@ -12,12 +12,14 @@ export default function Home() {
   const [city, setCity] = useState("");
   const [days, setDays] = useState(5);
   const [travelers, setTravelers] = useState(2);
+  const [style, setStyle] = useState("Mid-range");
+  const [budget, setBudget] = useState("");
+
   const [dateMode, setDateMode] = useState("flexible");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [flexibleMonth, setFlexibleMonth] = useState("");
-  const [style, setStyle] = useState("Mid-range");
-  const [budget, setBudget] = useState("");
+
   const [result, setResult] = useState(null);
 
   const cities = destinations.filter(
@@ -41,6 +43,18 @@ export default function Home() {
       return;
     }
 
+    if (dateMode === "specific") {
+      if (!startDate || !endDate) {
+        alert("Please select both departure and return dates.");
+        return;
+      }
+
+      if (endDate < startDate) {
+        alert("Return date must be after departure date.");
+        return;
+      }
+    }
+
     const destination = destinations.find(
       (item) =>
         item.country === country &&
@@ -52,19 +66,19 @@ export default function Home() {
       return;
     }
 
-  const costs = destination.costs[style];
+    const costs = destination.costs[style];
 
-const hotel =
-  costs.hotel * days * travelers;
+    const hotel =
+      costs.hotel * days * travelers;
 
-const food =
-  costs.food * days * travelers;
+    const food =
+      costs.food * days * travelers;
 
-const transport =
-  costs.transport * days * travelers;
+    const transport =
+      costs.transport * days * travelers;
 
-const activities =
-  costs.activities * days * travelers;
+    const activities =
+      costs.activities * days * travelers;
 
     const total = Math.round(
       hotel +
@@ -99,6 +113,10 @@ const activities =
     setCountry("");
     setCity("");
     setBudget("");
+    setDateMode("flexible");
+    setStartDate("");
+    setEndDate("");
+    setFlexibleMonth("");
   }
 
   return (
@@ -204,152 +222,156 @@ const activities =
 
         </select>
 
+
         {/* TRAVEL DATES */}
 
-<label>
-  When are you traveling?
-</label>
+        <label>
+          When are you traveling?
+        </label>
 
-<div className="style-options">
+        <div className="style-options">
 
-  <button
-    type="button"
-    className={
-      dateMode === "specific"
-        ? "style-button active"
-        : "style-button"
-    }
-    onClick={() => setDateMode("specific")}
-  >
-    📅 <span>Specific dates</span>
-  </button>
-
-  <button
-    type="button"
-    className={
-      dateMode === "flexible"
-        ? "style-button active"
-        : "style-button"
-    }
-    onClick={() => setDateMode("flexible")}
-  >
-    ✨ <span>Flexible dates</span>
-  </button>
-
-</div>
+          <button
+            type="button"
+            className={
+              dateMode === "specific"
+                ? "style-button active"
+                : "style-button"
+            }
+            onClick={() => setDateMode("specific")}
+          >
+            📅 <span>Specific dates</span>
+          </button>
 
 
-{dateMode === "specific" ? (
+          <button
+            type="button"
+            className={
+              dateMode === "flexible"
+                ? "style-button active"
+                : "style-button"
+            }
+            onClick={() => setDateMode("flexible")}
+          >
+            ✨ <span>Flexible dates</span>
+          </button>
 
-  <div className="grid">
-
-    <div>
-
-      <label>
-        Departure date
-      </label>
-
-      <input
-        type="date"
-        value={startDate}
-        onChange={(e) =>
-          setStartDate(e.target.value)
-        }
-      />
-
-    </div>
+        </div>
 
 
-    <div>
+        {dateMode === "specific" ? (
 
-      <label>
-        Return date
-      </label>
+          <div className="grid">
 
-      <input
-        type="date"
-        value={endDate}
-        onChange={(e) =>
-          setEndDate(e.target.value)
-        }
-      />
+            <div>
 
-    </div>
+              <label>
+                Departure date
+              </label>
 
-  </div>
+              <input
+                type="date"
+                value={startDate}
+                onChange={(e) =>
+                  setStartDate(e.target.value)
+                }
+              />
 
-) : (
+            </div>
 
-  <div>
 
-    <label>
-      Preferred travel month
-    </label>
+            <div>
 
-    <select
-      value={flexibleMonth}
-      onChange={(e) =>
-        setFlexibleMonth(e.target.value)
-      }
-    >
+              <label>
+                Return date
+              </label>
 
-      <option value="">
-        Any month
-      </option>
+              <input
+                type="date"
+                value={endDate}
+                onChange={(e) =>
+                  setEndDate(e.target.value)
+                }
+              />
 
-      <option value="January">
-        January
-      </option>
+            </div>
 
-      <option value="February">
-        February
-      </option>
+          </div>
 
-      <option value="March">
-        March
-      </option>
+        ) : (
 
-      <option value="April">
-        April
-      </option>
+          <div>
 
-      <option value="May">
-        May
-      </option>
+            <label>
+              Preferred travel month
+            </label>
 
-      <option value="June">
-        June
-      </option>
+            <select
+              value={flexibleMonth}
+              onChange={(e) =>
+                setFlexibleMonth(e.target.value)
+              }
+            >
 
-      <option value="July">
-        July
-      </option>
+              <option value="">
+                Any month
+              </option>
 
-      <option value="August">
-        August
-      </option>
+              <option value="January">
+                January
+              </option>
 
-      <option value="September">
-        September
-      </option>
+              <option value="February">
+                February
+              </option>
 
-      <option value="October">
-        October
-      </option>
+              <option value="March">
+                March
+              </option>
 
-      <option value="November">
-        November
-      </option>
+              <option value="April">
+                April
+              </option>
 
-      <option value="December">
-        December
-      </option>
+              <option value="May">
+                May
+              </option>
 
-    </select>
+              <option value="June">
+                June
+              </option>
 
-  </div>
+              <option value="July">
+                July
+              </option>
 
-)}
+              <option value="August">
+                August
+              </option>
+
+              <option value="September">
+                September
+              </option>
+
+              <option value="October">
+                October
+              </option>
+
+              <option value="November">
+                November
+              </option>
+
+              <option value="December">
+                December
+              </option>
+
+            </select>
+
+          </div>
+
+        )}
+
+
         {/* DAYS + TRAVELERS */}
 
         <div className="grid">
@@ -474,7 +496,7 @@ const activities =
         </div>
 
 
-        {/* BUTTON */}
+        {/* CALCULATE */}
 
         <button
           className="primary-button"
@@ -510,17 +532,13 @@ const activities =
               </h2>
 
               <p>
-                <p>
-            {result.country} · {days} days ·{" "}
-          {dateMode === "specific"
-          ? `${startDate || "Date not selected"} → ${
-          endDate || "Date not selected"
-        }`
-          : flexibleMonth
-          ? `Flexible · ${flexibleMonth}`
-          : "Flexible dates"}{" "}
-          · {travelers}{" "}
-                {travelers}{" "}
+                {result.country} · {days} days ·{" "}
+                {dateMode === "specific"
+                  ? `${startDate} → ${endDate}`
+                  : flexibleMonth
+                  ? `Flexible · ${flexibleMonth}`
+                  : "Flexible dates"}{" "}
+                · {travelers}{" "}
                 {travelers === 1
                   ? "traveler"
                   : "travelers"}{" "}
@@ -763,7 +781,7 @@ const activities =
           </div>
 
 
-          {/* FUTURE */}
+          {/* FUTURE FEATURES */}
 
           <div className="future-note">
 
