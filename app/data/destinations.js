@@ -1,163 +1,142 @@
 export const destinations = [
   {
     country: "Japan",
-    countryCode: "JP",
     city: "Tokyo",
-    slug: "tokyo",
+    currency: "JPY",
+    airport: "NRT",
+    bestMonths: ["March", "April", "October", "November"],
 
     costs: {
       Budget: {
-        hotel: 40,
+        hotel: 45,
         food: 25,
         transport: 10,
         activities: 10,
       },
 
       "Mid-range": {
-        hotel: 70,
-        food: 40,
-        transport: 15,
-        activities: 35,
-      },
-
-      Luxury: {
-        hotel: 150,
-        food: 75,
-        transport: 30,
-        activities: 45,
-      },
-    },
-  },
-
-  {
-    country: "Japan",
-    countryCode: "JP",
-    city: "Osaka",
-    slug: "osaka",
-
-    costs: {
-      Budget: {
-        hotel: 35,
-        food: 23,
-        transport: 9,
-        activities: 8,
-      },
-
-      "Mid-range": {
-        hotel: 60,
-        food: 35,
-        transport: 13,
-        activities: 32,
-      },
-
-      Luxury: {
-        hotel: 135,
-        food: 70,
-        transport: 28,
-        activities: 42,
-      },
-    },
-  },
-
-  {
-    country: "Japan",
-    countryCode: "JP",
-    city: "Kyoto",
-    slug: "kyoto",
-
-    costs: {
-      Budget: {
-        hotel: 38,
-        food: 24,
-        transport: 9,
-        activities: 9,
-      },
-
-      "Mid-range": {
-        hotel: 65,
-        food: 38,
-        transport: 14,
-        activities: 33,
-      },
-
-      Luxury: {
-        hotel: 145,
-        food: 75,
-        transport: 28,
-        activities: 45,
-      },
-    },
-  },
-
-  {
-    country: "South Korea",
-    countryCode: "KR",
-    city: "Seoul",
-    slug: "seoul",
-
-    costs: {
-      Budget: {
-        hotel: 35,
-        food: 22,
-        transport: 8,
-        activities: 8,
-      },
-
-      "Mid-range": {
-        hotel: 60,
-        food: 35,
-        transport: 12,
-        activities: 23,
-      },
-
-      Luxury: {
-        hotel: 130,
-        food: 70,
-        transport: 25,
-        activities: 35,
-      },
-    },
-  },
-
-  {
-    country: "Thailand",
-    countryCode: "TH",
-    city: "Bangkok",
-    slug: "bangkok",
-
-    costs: {
-      Budget: {
-        hotel: 25,
-        food: 15,
-        transport: 5,
-        activities: 5,
-      },
-
-      "Mid-range": {
-        hotel: 45,
-        food: 25,
-        transport: 8,
-        activities: 12,
-      },
-
-      Luxury: {
         hotel: 100,
-        food: 50,
-        transport: 20,
-        activities: 30,
+        food: 45,
+        transport: 15,
+        activities: 25,
+      },
+
+      Luxury: {
+        hotel: 250,
+        food: 100,
+        transport: 30,
+        activities: 80,
       },
     },
+
+    itinerary: [
+      {
+        day: 1,
+        title: "Arrival & Tokyo Center",
+        description:
+          "Arrive in Tokyo, check in and explore the city center.",
+      },
+      {
+        day: 2,
+        title: "Traditional Tokyo",
+        description:
+          "Visit Asakusa, Senso-ji Temple and explore traditional neighborhoods.",
+      },
+      {
+        day: 3,
+        title: "Modern Tokyo",
+        description:
+          "Explore Shibuya, Harajuku and Shinjuku.",
+      },
+      {
+        day: 4,
+        title: "Culture & Shopping",
+        description:
+          "Discover museums, local neighborhoods and shopping districts.",
+      },
+      {
+        day: 5,
+        title: "Tokyo Experience",
+        description:
+          "Enjoy local food, entertainment and free time before departure.",
+      },
+    ],
   },
 
   {
-    country: "Singapore",
-    countryCode: "SG",
-    city: "Singapore",
-    slug: "singapore",
+    country: "France",
+    city: "Paris",
+    currency: "EUR",
+    airport: "CDG",
+    bestMonths: ["April", "May", "June", "September", "October"],
 
     costs: {
       Budget: {
         hotel: 55,
+        food: 30,
+        transport: 10,
+        activities: 10,
+      },
+
+      "Mid-range": {
+        hotel: 120,
+        food: 55,
+        transport: 15,
+        activities: 30,
+      },
+
+      Luxury: {
+        hotel: 300,
+        food: 120,
+        transport: 35,
+        activities: 100,
+      },
+    },
+
+    itinerary: [
+      {
+        day: 1,
+        title: "Arrival & Central Paris",
+        description:
+          "Arrive in Paris, check in and explore the city center.",
+      },
+      {
+        day: 2,
+        title: "Eiffel Tower & Seine",
+        description:
+          "Visit the Eiffel Tower and enjoy a walk along the Seine.",
+      },
+      {
+        day: 3,
+        title: "Louvre & Historic Paris",
+        description:
+          "Explore the Louvre and historic neighborhoods.",
+      },
+      {
+        day: 4,
+        title: "Montmartre",
+        description:
+          "Discover Montmartre, Sacré-Cœur and local cafés.",
+      },
+      {
+        day: 5,
+        title: "Paris Lifestyle",
+        description:
+          "Enjoy shopping, French cuisine and free time.",
+      },
+    ],
+  },
+
+  {
+    country: "South Korea",
+    city: "Seoul",
+    currency: "KRW",
+    airport: "ICN",
+    bestMonths: ["April", "May", "September", "October"],
+
+    costs: {
+      Budget: {
+        hotel: 40,
         food: 25,
         transport: 8,
         activities: 8,
@@ -165,167 +144,114 @@ export const destinations = [
 
       "Mid-range": {
         hotel: 90,
-        food: 40,
-        transport: 15,
-        activities: 25,
-      },
-
-      Luxury: {
-        hotel: 190,
-        food: 80,
-        transport: 30,
-        activities: 50,
-      },
-    },
-  },
-
-  {
-    country: "France",
-    countryCode: "FR",
-    city: "Paris",
-    slug: "paris",
-
-    costs: {
-      Budget: {
-        hotel: 60,
-        food: 30,
-        transport: 10,
-        activities: 10,
-      },
-
-      "Mid-range": {
-        hotel: 100,
-        food: 50,
-        transport: 15,
+        food: 45,
+        transport: 12,
         activities: 25,
       },
 
       Luxury: {
         hotel: 220,
-        food: 90,
+        food: 100,
         transport: 30,
-        activities: 40,
+        activities: 70,
       },
     },
+
+    itinerary: [
+      {
+        day: 1,
+        title: "Arrival & Myeongdong",
+        description:
+          "Arrive in Seoul, check in and explore Myeongdong.",
+      },
+      {
+        day: 2,
+        title: "Historic Seoul",
+        description:
+          "Visit Gyeongbokgung Palace and Bukchon Hanok Village.",
+      },
+      {
+        day: 3,
+        title: "Modern Seoul",
+        description:
+          "Explore Gangnam, COEX and the Han River.",
+      },
+      {
+        day: 4,
+        title: "Food & Culture",
+        description:
+          "Discover local markets, cafés and Korean cuisine.",
+      },
+      {
+        day: 5,
+        title: "Seoul Experience",
+        description:
+          "Enjoy shopping, entertainment and free time.",
+      },
+    ],
   },
 
   {
-    country: "United Kingdom",
-    countryCode: "GB",
-    city: "London",
-    slug: "london",
+    country: "Thailand",
+    city: "Bangkok",
+    currency: "THB",
+    airport: "BKK",
+    bestMonths: ["November", "December", "January", "February"],
 
     costs: {
       Budget: {
+        hotel: 25,
+        food: 15,
+        transport: 5,
+        activities: 8,
+      },
+
+      "Mid-range": {
         hotel: 65,
         food: 30,
-        transport: 12,
-        activities: 10,
-      },
-
-      "Mid-range": {
-        hotel: 110,
-        food: 55,
-        transport: 18,
-        activities: 30,
+        transport: 8,
+        activities: 20,
       },
 
       Luxury: {
-        hotel: 240,
-        food: 100,
-        transport: 35,
-        activities: 45,
+        hotel: 180,
+        food: 80,
+        transport: 20,
+        activities: 60,
       },
     },
-  },
 
-  {
-    country: "Australia",
-    countryCode: "AU",
-    city: "Sydney",
-    slug: "sydney",
-
-    costs: {
-      Budget: {
-        hotel: 60,
-        food: 30,
-        transport: 10,
-        activities: 10,
+    itinerary: [
+      {
+        day: 1,
+        title: "Arrival & Bangkok",
+        description:
+          "Arrive in Bangkok and explore the city center.",
       },
-
-      "Mid-range": {
-        hotel: 100,
-        food: 50,
-        transport: 15,
-        activities: 25,
+      {
+        day: 2,
+        title: "Temples & Old Bangkok",
+        description:
+          "Visit the Grand Palace, Wat Pho and Wat Arun.",
       },
-
-      Luxury: {
-        hotel: 220,
-        food: 90,
-        transport: 30,
-        activities: 40,
+      {
+        day: 3,
+        title: "Markets & Local Food",
+        description:
+          "Explore local markets and experience Thai cuisine.",
       },
-    },
-  },
-
-  {
-    country: "Canada",
-    countryCode: "CA",
-    city: "Vancouver",
-    slug: "vancouver",
-
-    costs: {
-      Budget: {
-        hotel: 60,
-        food: 30,
-        transport: 10,
-        activities: 10,
+      {
+        day: 4,
+        title: "Modern Bangkok",
+        description:
+          "Discover shopping malls, cafés and modern neighborhoods.",
       },
-
-      "Mid-range": {
-        hotel: 100,
-        food: 50,
-        transport: 15,
-        activities: 25,
+      {
+        day: 5,
+        title: "Relax & Explore",
+        description:
+          "Enjoy a relaxed day before departure.",
       },
-
-      Luxury: {
-        hotel: 210,
-        food: 90,
-        transport: 30,
-        activities: 40,
-      },
-    },
-  },
-
-  {
-    country: "Canada",
-    countryCode: "CA",
-    city: "Toronto",
-    slug: "toronto",
-
-    costs: {
-      Budget: {
-        hotel: 60,
-        food: 30,
-        transport: 10,
-        activities: 10,
-      },
-
-      "Mid-range": {
-        hotel: 95,
-        food: 50,
-        transport: 15,
-        activities: 25,
-      },
-
-      Luxury: {
-        hotel: 200,
-        food: 90,
-        transport: 30,
-        activities: 40,
-      },
-    },
+    ],
   },
 ];
