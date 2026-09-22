@@ -12,6 +12,10 @@ export default function Home() {
   const [city, setCity] = useState("");
   const [days, setDays] = useState(5);
   const [travelers, setTravelers] = useState(2);
+  const [dateMode, setDateMode] = useState("flexible");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [flexibleMonth, setFlexibleMonth] = useState("");
   const [style, setStyle] = useState("Mid-range");
   const [budget, setBudget] = useState("");
   const [result, setResult] = useState(null);
@@ -200,7 +204,152 @@ const activities =
 
         </select>
 
+        {/* TRAVEL DATES */}
 
+<label>
+  When are you traveling?
+</label>
+
+<div className="style-options">
+
+  <button
+    type="button"
+    className={
+      dateMode === "specific"
+        ? "style-button active"
+        : "style-button"
+    }
+    onClick={() => setDateMode("specific")}
+  >
+    📅 <span>Specific dates</span>
+  </button>
+
+  <button
+    type="button"
+    className={
+      dateMode === "flexible"
+        ? "style-button active"
+        : "style-button"
+    }
+    onClick={() => setDateMode("flexible")}
+  >
+    ✨ <span>Flexible dates</span>
+  </button>
+
+</div>
+
+
+{dateMode === "specific" ? (
+
+  <div className="grid">
+
+    <div>
+
+      <label>
+        Departure date
+      </label>
+
+      <input
+        type="date"
+        value={startDate}
+        onChange={(e) =>
+          setStartDate(e.target.value)
+        }
+      />
+
+    </div>
+
+
+    <div>
+
+      <label>
+        Return date
+      </label>
+
+      <input
+        type="date"
+        value={endDate}
+        onChange={(e) =>
+          setEndDate(e.target.value)
+        }
+      />
+
+    </div>
+
+  </div>
+
+) : (
+
+  <div>
+
+    <label>
+      Preferred travel month
+    </label>
+
+    <select
+      value={flexibleMonth}
+      onChange={(e) =>
+        setFlexibleMonth(e.target.value)
+      }
+    >
+
+      <option value="">
+        Any month
+      </option>
+
+      <option value="January">
+        January
+      </option>
+
+      <option value="February">
+        February
+      </option>
+
+      <option value="March">
+        March
+      </option>
+
+      <option value="April">
+        April
+      </option>
+
+      <option value="May">
+        May
+      </option>
+
+      <option value="June">
+        June
+      </option>
+
+      <option value="July">
+        July
+      </option>
+
+      <option value="August">
+        August
+      </option>
+
+      <option value="September">
+        September
+      </option>
+
+      <option value="October">
+        October
+      </option>
+
+      <option value="November">
+        November
+      </option>
+
+      <option value="December">
+        December
+      </option>
+
+    </select>
+
+  </div>
+
+)}
         {/* DAYS + TRAVELERS */}
 
         <div className="grid">
@@ -361,7 +510,16 @@ const activities =
               </h2>
 
               <p>
-                {result.country} · {days} days ·{" "}
+                <p>
+            {result.country} · {days} days ·{" "}
+          {dateMode === "specific"
+          ? `${startDate || "Date not selected"} → ${
+          endDate || "Date not selected"
+        }`
+          : flexibleMonth
+          ? `Flexible · ${flexibleMonth}`
+          : "Flexible dates"}{" "}
+          · {travelers}{" "}
                 {travelers}{" "}
                 {travelers === 1
                   ? "traveler"
