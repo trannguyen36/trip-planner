@@ -98,6 +98,9 @@ export default function Home() {
     setResult({
       city: destination.city,
       country: destination.country,
+      currency: destination.currency,
+      airport: destination.airport,
+      bestMonths: destination.bestMonths,
       total,
       hotel: Math.round(hotel),
       food: Math.round(food),
@@ -105,6 +108,7 @@ export default function Home() {
       activities: Math.round(activities),
       maxBudget,
       difference,
+      itinerary: destination.itinerary,
     });
   }
 
@@ -121,8 +125,6 @@ export default function Home() {
 
   return (
     <main className="container">
-
-      {/* HERO */}
 
       <section className="hero">
 
@@ -144,9 +146,6 @@ export default function Home() {
 
       </section>
 
-
-      {/* CALCULATOR */}
-
       <section className="card planner-card">
 
         <div className="section-title">
@@ -160,9 +159,6 @@ export default function Home() {
           </p>
 
         </div>
-
-
-        {/* COUNTRY */}
 
         <label>
           Country
@@ -189,9 +185,6 @@ export default function Home() {
           ))}
 
         </select>
-
-
-        {/* CITY */}
 
         <label>
           City
@@ -222,9 +215,6 @@ export default function Home() {
 
         </select>
 
-
-        {/* TRAVEL DATES */}
-
         <label>
           When are you traveling?
         </label>
@@ -243,7 +233,6 @@ export default function Home() {
             📅 <span>Specific dates</span>
           </button>
 
-
           <button
             type="button"
             className={
@@ -257,7 +246,6 @@ export default function Home() {
           </button>
 
         </div>
-
 
         {dateMode === "specific" ? (
 
@@ -278,7 +266,6 @@ export default function Home() {
               />
 
             </div>
-
 
             <div>
 
@@ -317,62 +304,24 @@ export default function Home() {
                 Any month
               </option>
 
-              <option value="January">
-                January
-              </option>
-
-              <option value="February">
-                February
-              </option>
-
-              <option value="March">
-                March
-              </option>
-
-              <option value="April">
-                April
-              </option>
-
-              <option value="May">
-                May
-              </option>
-
-              <option value="June">
-                June
-              </option>
-
-              <option value="July">
-                July
-              </option>
-
-              <option value="August">
-                August
-              </option>
-
-              <option value="September">
-                September
-              </option>
-
-              <option value="October">
-                October
-              </option>
-
-              <option value="November">
-                November
-              </option>
-
-              <option value="December">
-                December
-              </option>
+              <option value="January">January</option>
+              <option value="February">February</option>
+              <option value="March">March</option>
+              <option value="April">April</option>
+              <option value="May">May</option>
+              <option value="June">June</option>
+              <option value="July">July</option>
+              <option value="August">August</option>
+              <option value="September">September</option>
+              <option value="October">October</option>
+              <option value="November">November</option>
+              <option value="December">December</option>
 
             </select>
 
           </div>
 
         )}
-
-
-        {/* DAYS + TRAVELERS */}
 
         <div className="grid">
 
@@ -394,7 +343,6 @@ export default function Home() {
 
           </div>
 
-
           <div>
 
             <label>
@@ -414,9 +362,6 @@ export default function Home() {
           </div>
 
         </div>
-
-
-        {/* TRAVEL STYLE */}
 
         <label>
           Travel style
@@ -438,7 +383,6 @@ export default function Home() {
             💰 <span>Budget</span>
           </button>
 
-
           <button
             type="button"
             className={
@@ -452,7 +396,6 @@ export default function Home() {
           >
             ✨ <span>Mid-range</span>
           </button>
-
 
           <button
             type="button"
@@ -469,9 +412,6 @@ export default function Home() {
           </button>
 
         </div>
-
-
-        {/* BUDGET */}
 
         <label>
           Maximum budget
@@ -495,9 +435,6 @@ export default function Home() {
 
         </div>
 
-
-        {/* CALCULATE */}
-
         <button
           className="primary-button"
           onClick={createTrip}
@@ -505,15 +442,11 @@ export default function Home() {
           Calculate My Trip →
         </button>
 
-
         <p className="privacy-note">
           Free to use · No account required
         </p>
 
       </section>
-
-
-      {/* RESULT */}
 
       {result && (
 
@@ -547,7 +480,6 @@ export default function Home() {
 
             </div>
 
-
             <div className="total-box">
 
               <span>
@@ -561,9 +493,6 @@ export default function Home() {
             </div>
 
           </div>
-
-
-          {/* BUDGET STATUS */}
 
           {result.maxBudget && (
 
@@ -601,16 +530,11 @@ export default function Home() {
 
           )}
 
-
-          {/* BREAKDOWN */}
-
           <div className="breakdown-grid">
 
             <div className="breakdown-item">
 
-              <span>
-                🏨
-              </span>
+              <span>🏨</span>
 
               <div>
 
@@ -626,12 +550,9 @@ export default function Home() {
 
             </div>
 
-
             <div className="breakdown-item">
 
-              <span>
-                🍜
-              </span>
+              <span>🍜</span>
 
               <div>
 
@@ -647,12 +568,9 @@ export default function Home() {
 
             </div>
 
-
             <div className="breakdown-item">
 
-              <span>
-                🚆
-              </span>
+              <span>🚆</span>
 
               <div>
 
@@ -668,12 +586,9 @@ export default function Home() {
 
             </div>
 
-
             <div className="breakdown-item">
 
-              <span>
-                🎟️
-              </span>
+              <span>🎟️</span>
 
               <div>
 
@@ -691,9 +606,6 @@ export default function Home() {
 
           </div>
 
-
-          {/* ITINERARY */}
-
           <div className="itinerary">
 
             <div className="result-label">
@@ -704,74 +616,43 @@ export default function Home() {
               Suggested {days}-day trip
             </h3>
 
+            {result.itinerary
+              .slice(0, Math.min(days, result.itinerary.length))
+              .map((item) => (
 
-            <div className="day">
+                <div
+                  className="day"
+                  key={item.day}
+                >
 
-              <strong>
-                Day 1
-              </strong>
+                  <strong>
+                    Day {item.day}
+                  </strong>
 
-              <p>
-                Arrival and explore the city center
-              </p>
+                  <h4>
+                    {item.title}
+                  </h4>
 
-            </div>
+                  <p>
+                    {item.description}
+                  </p>
 
+                </div>
 
-            <div className="day">
+              ))}
 
-              <strong>
-                Day 2
-              </strong>
-
-              <p>
-                Major attractions and local food
-              </p>
-
-            </div>
-
-
-            <div className="day">
-
-              <strong>
-                Day 3
-              </strong>
-
-              <p>
-                Culture, shopping and neighborhoods
-              </p>
-
-            </div>
-
-
-            {days >= 4 && (
+            {days > result.itinerary.length && (
 
               <div className="day">
 
                 <strong>
-                  Day 4
+                  Day {result.itinerary.length + 1}+
                 </strong>
 
                 <p>
-                  Day trip or special local experience
-                </p>
-
-              </div>
-
-            )}
-
-
-            {days >= 5 && (
-
-              <div className="day">
-
-                <strong>
-                  Day 5+
-                </strong>
-
-                <p>
-                  Relax, explore more and prepare
-                  for departure
+                  Continue exploring the destination,
+                  enjoy local experiences and keep some
+                  free time before departure.
                 </p>
 
               </div>
@@ -780,8 +661,45 @@ export default function Home() {
 
           </div>
 
+          <div className="destination-info">
 
-          {/* FUTURE FEATURES */}
+            <div>
+
+              <small>
+                Main airport
+              </small>
+
+              <strong>
+                {result.airport}
+              </strong>
+
+            </div>
+
+            <div>
+
+              <small>
+                Currency
+              </small>
+
+              <strong>
+                {result.currency}
+              </strong>
+
+            </div>
+
+            <div>
+
+              <small>
+                Recommended months
+              </small>
+
+              <strong>
+                {result.bestMonths.join(", ")}
+              </strong>
+
+            </div>
+
+          </div>
 
           <div className="future-note">
 
@@ -789,7 +707,6 @@ export default function Home() {
             activities, eSIMs and travel insurance.
 
           </div>
-
 
           <button
             className="secondary-button"
