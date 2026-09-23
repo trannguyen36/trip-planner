@@ -8,17 +8,22 @@ export default function Home() {
     ...new Set(destinations.map((item) => item.country)),
   ];
 
+  const [from, setFrom] = useState("Ho Chi Minh City");
+
+  const [budget, setBudget] = useState(1800);
+
+  const [travelers, setTravelers] = useState(2);
+  const [days, setDays] = useState(7);
+
+  const [flexibleMonth, setFlexibleMonth] = useState("November");
+
+  const [style, setStyle] = useState("Mid-range");
+
+  const [destinationMode, setDestinationMode] =
+    useState("flexible");
+
   const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
-  const [days, setDays] = useState(5);
-  const [travelers, setTravelers] = useState(2);
-  const [style, setStyle] = useState("Mid-range");
-  const [budget, setBudget] = useState("");
-
-  const [dateMode, setDateMode] = useState("flexible");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [flexibleMonth, setFlexibleMonth] = useState("");
 
   const [result, setResult] = useState(null);
 
@@ -26,59 +31,31 @@ export default function Home() {
     (item) => item.country === country
   );
 
+  function changeBudget(amount) {
+    setBudget((current) =>
+      Math.max(100, current + amount)
+    );
+  }
+
   function handleCountryChange(value) {
     setCountry(value);
     setCity("");
-    setResult(null);
   }
 
-  function createTrip() {
-    if (!country) {
-      alert("Please select a country.");
-      return;
-    }
-
-    if (!city) {
-      alert("Please select a city.");
-      return;
-    }
-
-    if (dateMode === "specific") {
-      if (!startDate || !endDate) {
-        alert("Please select both departure and return dates.");
-        return;
-      }
-
-      if (endDate < startDate) {
-        alert("Return date must be after departure date.");
-        return;
-      }
-    }
-
-    const destination = destinations.find(
-      (item) =>
-        item.country === country &&
-        item.city === city
-    );
-
-    if (!destination) {
-      alert("Destination not found.");
-      return;
-    }
-
-    const costs = destination.costs[style];
+  function calculateDestination(destination, tripDays = days, tripStyle = style) {
+    const costs = destination.costs[tripStyle];
 
     const hotel =
-      costs.hotel * days * travelers;
+      costs.hotel * tripDays * travelers;
 
     const food =
-      costs.food * days * travelers;
+      costs.food * tripDays * travelers;
 
     const transport =
-      costs.transport * days * travelers;
+      costs.transport * tripDays * travelers;
 
     const activities =
-      costs.activities * days * travelers;
+      costs.activities * tripDays * travelers;
 
     const total = Math.round(
       hotel +
@@ -87,15 +64,7 @@ export default function Home() {
         activities
     );
 
-    const maxBudget = budget
-      ? Number(budget)
-      : null;
-
-    const difference = maxBudget
-      ? total - maxBudget
-      : null;
-
-    setResult({
+    return {
       city: destination.city,
       country: destination.country,
       currency: destination.currency,
@@ -106,9 +75,121 @@ export default function Home() {
       food: Math.round(food),
       transport: Math.round(transport),
       activities: Math.round(activities),
-      maxBudget,
-      difference,
+      difference: total - budget,
       itinerary: destination.itinerary,
+    };
+  }
+
+  function createTrip() {
+    if (
+      destinationMode === "specific" &&
+      (!country || !city)
+    ) {
+      alert("Please select a country and city.");
+      return;
+    }
+
+    let destination;
+
+    if (destinationMode === "specific") {
+      destination = destinations.find(
+        (item) =>
+          item.country === country &&
+          item.city === city
+      );
+    } else {
+      destination = destinations[0];
+    }
+
+    if (!destination) {
+      alert("Destination not found.");
+      return;
+    }
+
+    const calculated = calculateDestination(
+      destination
+    );
+
+    setResult({
+      ...calculated,
+      mode: destinationMode,
+    });
+  }
+
+  function chooseDestination(destination) {
+    setDestinationMode("specific");
+    setCountry(destination.country);
+    setCity(destination.city);
+
+    const calculated =
+      calculateDestination(destination);
+
+    setResult({
+      ...calculated,
+      mode: "specific",
+    });
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }
+
+  function chooseShorterTrip() {
+    if (!result) return;
+
+    const newDays = Math.max(1, days - 1);
+
+    setDays(newDays);
+
+    const destination = destinations.find(
+      (item) =>
+        item.country === result.country &&
+        item.city === result.city
+    );
+
+    if (!destination) return;
+
+    const calculated = calculateDestination(
+      destination,
+      newDays,
+      style
+    );
+
+    setResult({
+      ...calculated,
+      mode: "specific",
+    });
+  }
+
+  function chooseCheaperStyle() {
+    if (!result) return;
+
+    let newStyle = "Budget";
+
+    if (style === "Budget") {
+      return;
+    }
+
+    setStyle(newStyle);
+
+    const destination = destinations.find(
+      (item) =>
+        item.country === result.country &&
+        item.city === result.city
+    );
+
+    if (!destination) return;
+
+    const calculated = calculateDestination(
+      destination,
+      days,
+      newStyle
+    );
+
+    setResult({
+      ...calculated,
+      mode: "specific",
     });
   }
 
@@ -116,232 +197,167 @@ export default function Home() {
     setResult(null);
     setCountry("");
     setCity("");
-    setBudget("");
-    setDateMode("flexible");
-    setStartDate("");
-    setEndDate("");
-    setFlexibleMonth("");
+    setDestinationMode("flexible");
+    setBudget(1800);
+    setDays(7);
+    setTravelers(2);
+    setStyle("Mid-range");
+    setFlexibleMonth("November");
   }
+
+  const alternativeDestinations =
+    result
+      ? destinations
+          .filter(
+            (item) =>
+              !(
+                item.country === result.country &&
+                item.city === result.city
+              )
+          )
+          .map((destination) => ({
+            destination,
+            estimate: calculateDestination(destination),
+          }))
+          .sort((a, b) => {
+            const aUnder =
+              a.estimate.total <= budget;
+
+            const bUnder =
+              b.estimate.total <= budget;
+
+            if (aUnder && !bUnder) return -1;
+            if (!aUnder && bUnder) return 1;
+
+            return (
+              Math.abs(a.estimate.total - budget) -
+              Math.abs(b.estimate.total - budget)
+            );
+          })
+          .slice(0, 3)
+      : [];
+
+  const isOverBudget =
+    result && result.total > budget;
 
   return (
     <main className="container">
 
+      {/* HERO */}
+
       <section className="hero">
 
         <div className="hero-badge">
-          ✈️ SMART TRIP PLANNER
+          ✈️ TRAVEL BUDGET ENGINE
         </div>
 
         <h1>
-          Plan your trip.
-          <br />
-          <span>Know your budget.</span>
+          Where can you actually go?
         </h1>
 
         <p className="subtitle">
-          Estimate your travel cost based on your
-          destination, trip length, travelers and
-          travel style.
+          Tell us your budget and trip preferences.
+          We'll calculate the cost and find
+          destinations and travel plans that fit.
         </p>
 
       </section>
+
+
+      {/* PLANNER */}
 
       <section className="card planner-card">
 
         <div className="section-title">
 
           <h2>
-            Start planning
+            Plan your trip
           </h2>
 
           <p>
-            Tell us about your trip.
+            Adjust your budget and preferences.
           </p>
 
         </div>
 
-        <label>
-          Country
-        </label>
 
-        <select
-          value={country}
-          onChange={(e) =>
-            handleCountryChange(e.target.value)
-          }
-        >
-
-          <option value="">
-            Select a country
-          </option>
-
-          {countries.map((item) => (
-            <option
-              key={item}
-              value={item}
-            >
-              {item}
-            </option>
-          ))}
-
-        </select>
-
-        <label>
-          City
-        </label>
-
-        <select
-          value={city}
-          onChange={(e) =>
-            setCity(e.target.value)
-          }
-          disabled={!country}
-        >
-
-          <option value="">
-            {country
-              ? "Select a city"
-              : "Select country first"}
-          </option>
-
-          {cities.map((item) => (
-            <option
-              key={item.city}
-              value={item.city}
-            >
-              {item.city}
-            </option>
-          ))}
-
-        </select>
-
-        <label>
-          When are you traveling?
-        </label>
-
-        <div className="style-options">
-
-          <button
-            type="button"
-            className={
-              dateMode === "specific"
-                ? "style-button active"
-                : "style-button"
-            }
-            onClick={() => setDateMode("specific")}
-          >
-            📅 <span>Specific dates</span>
-          </button>
-
-          <button
-            type="button"
-            className={
-              dateMode === "flexible"
-                ? "style-button active"
-                : "style-button"
-            }
-            onClick={() => setDateMode("flexible")}
-          >
-            ✨ <span>Flexible dates</span>
-          </button>
-
-        </div>
-
-        {dateMode === "specific" ? (
-
-          <div className="grid">
-
-            <div>
-
-              <label>
-                Departure date
-              </label>
-
-              <input
-                type="date"
-                value={startDate}
-                onChange={(e) =>
-                  setStartDate(e.target.value)
-                }
-              />
-
-            </div>
-
-            <div>
-
-              <label>
-                Return date
-              </label>
-
-              <input
-                type="date"
-                value={endDate}
-                onChange={(e) =>
-                  setEndDate(e.target.value)
-                }
-              />
-
-            </div>
-
-          </div>
-
-        ) : (
-
-          <div>
-
-            <label>
-              Preferred travel month
-            </label>
-
-            <select
-              value={flexibleMonth}
-              onChange={(e) =>
-                setFlexibleMonth(e.target.value)
-              }
-            >
-
-              <option value="">
-                Any month
-              </option>
-
-              <option value="January">January</option>
-              <option value="February">February</option>
-              <option value="March">March</option>
-              <option value="April">April</option>
-              <option value="May">May</option>
-              <option value="June">June</option>
-              <option value="July">July</option>
-              <option value="August">August</option>
-              <option value="September">September</option>
-              <option value="October">October</option>
-              <option value="November">November</option>
-              <option value="December">December</option>
-
-            </select>
-
-          </div>
-
-        )}
+        {/* FROM + BUDGET */}
 
         <div className="grid">
 
           <div>
 
             <label>
-              Number of days
+              From
             </label>
 
             <input
-              type="number"
-              min="1"
-              max="60"
-              value={days}
+              type="text"
+              value={from}
               onChange={(e) =>
-                setDays(Number(e.target.value))
+                setFrom(e.target.value)
               }
             />
 
           </div>
+
+
+          <div>
+
+            <label>
+              Total budget (USD)
+            </label>
+
+            <div className="budget-input">
+
+              <button
+                type="button"
+                className="budget-adjust"
+                onClick={() =>
+                  changeBudget(-100)
+                }
+              >
+                −
+              </button>
+
+              <span>
+                $
+              </span>
+
+              <input
+                type="number"
+                min="100"
+                value={budget}
+                onChange={(e) =>
+                  setBudget(
+                    Math.max(
+                      100,
+                      Number(e.target.value)
+                    )
+                  )
+                }
+              />
+
+              <button
+                type="button"
+                className="budget-adjust"
+                onClick={() =>
+                  changeBudget(100)
+                }
+              >
+                +
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        {/* TRAVELERS + DAYS */}
+
+        <div className="grid">
 
           <div>
 
@@ -349,22 +365,176 @@ export default function Home() {
               Travelers
             </label>
 
-            <input
-              type="number"
-              min="1"
-              max="20"
+            <select
               value={travelers}
               onChange={(e) =>
-                setTravelers(Number(e.target.value))
+                setTravelers(
+                  Number(e.target.value)
+                )
               }
-            />
+            >
+
+              {[1, 2, 3, 4, 5, 6, 7, 8].map(
+                (number) => (
+                  <option
+                    key={number}
+                    value={number}
+                  >
+                    {number}
+                  </option>
+                )
+              )}
+
+            </select>
+
+          </div>
+
+
+          <div>
+
+            <label>
+              Trip length
+            </label>
+
+            <select
+              value={days}
+              onChange={(e) =>
+                setDays(
+                  Number(e.target.value)
+                )
+              }
+            >
+
+              {[3, 4, 5, 6, 7, 10, 14, 21].map(
+                (number) => (
+                  <option
+                    key={number}
+                    value={number}
+                  >
+                    {number} days
+                  </option>
+                )
+              )}
+
+            </select>
 
           </div>
 
         </div>
 
+
+        {/* MONTH + STYLE */}
+
+        <div className="grid">
+
+          <div>
+
+            <label>
+              Preferred month
+            </label>
+
+            <select
+              value={flexibleMonth}
+              onChange={(e) =>
+                setFlexibleMonth(
+                  e.target.value
+                )
+              }
+            >
+
+              <option value="">
+                Any month
+              </option>
+
+              <option value="January">
+                January
+              </option>
+
+              <option value="February">
+                February
+              </option>
+
+              <option value="March">
+                March
+              </option>
+
+              <option value="April">
+                April
+              </option>
+
+              <option value="May">
+                May
+              </option>
+
+              <option value="June">
+                June
+              </option>
+
+              <option value="July">
+                July
+              </option>
+
+              <option value="August">
+                August
+              </option>
+
+              <option value="September">
+                September
+              </option>
+
+              <option value="October">
+                October
+              </option>
+
+              <option value="November">
+                November
+              </option>
+
+              <option value="December">
+                December
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div>
+
+            <label>
+              Travel style
+            </label>
+
+            <select
+              value={style}
+              onChange={(e) =>
+                setStyle(e.target.value)
+              }
+            >
+
+              <option value="Budget">
+                Budget
+              </option>
+
+              <option value="Mid-range">
+                Comfortable
+              </option>
+
+              <option value="Luxury">
+                Luxury
+              </option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+
+        {/* DESTINATION */}
+
         <label>
-          Travel style
+          Destination
         </label>
 
         <div className="style-options">
@@ -372,74 +542,122 @@ export default function Home() {
           <button
             type="button"
             className={
-              style === "Budget"
+              destinationMode === "flexible"
                 ? "style-button active"
                 : "style-button"
             }
             onClick={() =>
-              setStyle("Budget")
+              setDestinationMode("flexible")
             }
           >
-            💰 <span>Budget</span>
+            ✨ Flexible
+            <span>
+              Find destinations for me
+            </span>
           </button>
+
 
           <button
             type="button"
             className={
-              style === "Mid-range"
+              destinationMode === "specific"
                 ? "style-button active"
                 : "style-button"
             }
             onClick={() =>
-              setStyle("Mid-range")
+              setDestinationMode("specific")
             }
           >
-            ✨ <span>Mid-range</span>
-          </button>
-
-          <button
-            type="button"
-            className={
-              style === "Luxury"
-                ? "style-button active"
-                : "style-button"
-            }
-            onClick={() =>
-              setStyle("Luxury")
-            }
-          >
-            💎 <span>Luxury</span>
+            📍 I have a destination in mind
           </button>
 
         </div>
 
-        <label>
-          Maximum budget
-        </label>
 
-        <div className="budget-input">
+        {/* COUNTRY + CITY */}
 
-          <span>
-            $
-          </span>
+        {destinationMode === "specific" && (
 
-          <input
-            type="number"
-            min="0"
-            placeholder="Optional"
-            value={budget}
-            onChange={(e) =>
-              setBudget(e.target.value)
-            }
-          />
+          <div className="grid">
 
-        </div>
+            <div>
+
+              <label>
+                Country
+              </label>
+
+              <select
+                value={country}
+                onChange={(e) =>
+                  handleCountryChange(
+                    e.target.value
+                  )
+                }
+              >
+
+                <option value="">
+                  Select a country
+                </option>
+
+                {countries.map((item) => (
+                  <option
+                    key={item}
+                    value={item}
+                  >
+                    {item}
+                  </option>
+                ))}
+
+              </select>
+
+            </div>
+
+
+            <div>
+
+              <label>
+                City
+              </label>
+
+              <select
+                value={city}
+                disabled={!country}
+                onChange={(e) =>
+                  setCity(e.target.value)
+                }
+              >
+
+                <option value="">
+                  {country
+                    ? "Select a city"
+                    : "Select country first"}
+                </option>
+
+                {cities.map((item) => (
+                  <option
+                    key={item.city}
+                    value={item.city}
+                  >
+                    {item.city}
+                  </option>
+                ))}
+
+              </select>
+
+            </div>
+
+          </div>
+
+        )}
+
+
+        {/* CALCULATE */}
 
         <button
           className="primary-button"
           onClick={createTrip}
         >
-          Calculate My Trip →
+          Calculate & Find Destinations →
         </button>
 
         <p className="privacy-note">
@@ -448,39 +666,169 @@ export default function Home() {
 
       </section>
 
+
+      {/* RESULT */}
+
       {result && (
 
-        <section className="result-card">
+        <>
 
-          <div className="result-header">
+          <section className="result-card">
 
-            <div>
+            <div className="result-header">
 
-              <div className="result-label">
-                ESTIMATED TRIP COST
+              <div>
+
+                <div className="result-label">
+                  YOUR REQUEST
+                </div>
+
+                <h2>
+                  Current trip estimate
+                </h2>
+
+                <p>
+                  {result.city},{" "}
+                  {result.country} ·{" "}
+                  {days} days ·{" "}
+                  {travelers}{" "}
+                  {travelers === 1
+                    ? "traveler"
+                    : "travelers"}
+                </p>
+
               </div>
 
-              <h2>
-                {result.city}
-              </h2>
 
-              <p>
-                {result.country} · {days} days ·{" "}
-                {dateMode === "specific"
-                  ? `${startDate} → ${endDate}`
-                  : flexibleMonth
-                  ? `Flexible · ${flexibleMonth}`
-                  : "Flexible dates"}{" "}
-                · {travelers}{" "}
-                {travelers === 1
-                  ? "traveler"
-                  : "travelers"}{" "}
-                · {style}
-              </p>
+              <div className="total-box">
+
+                <span>
+                  {isOverBudget
+                    ? "Over budget"
+                    : "Within budget"}
+                </span>
+
+                <strong>
+                  {isOverBudget
+                    ? `+$${(
+                        result.total -
+                        budget
+                      ).toLocaleString()}`
+                    : `+$${(
+                        budget -
+                        result.total
+                      ).toLocaleString()}`}
+                </strong>
+
+              </div>
 
             </div>
 
-            <div className="total-box">
+
+            {/* COST BREAKDOWN */}
+
+            <div className="breakdown-grid">
+
+              <div className="breakdown-item">
+
+                <span>✈️</span>
+
+                <div>
+
+                  <small>
+                    Flight
+                  </small>
+
+                  <strong>
+                    ${Math.round(
+                      result.total * 0.32
+                    ).toLocaleString()}
+                  </strong>
+
+                </div>
+
+              </div>
+
+
+              <div className="breakdown-item">
+
+                <span>🏨</span>
+
+                <div>
+
+                  <small>
+                    Hotel
+                  </small>
+
+                  <strong>
+                    ${result.hotel.toLocaleString()}
+                  </strong>
+
+                </div>
+
+              </div>
+
+
+              <div className="breakdown-item">
+
+                <span>🍜</span>
+
+                <div>
+
+                  <small>
+                    Food
+                  </small>
+
+                  <strong>
+                    ${result.food.toLocaleString()}
+                  </strong>
+
+                </div>
+
+              </div>
+
+
+              <div className="breakdown-item">
+
+                <span>🚆</span>
+
+                <div>
+
+                  <small>
+                    Transport
+                  </small>
+
+                  <strong>
+                    ${result.transport.toLocaleString()}
+                  </strong>
+
+                </div>
+
+              </div>
+
+
+              <div className="breakdown-item">
+
+                <span>🎟️</span>
+
+                <div>
+
+                  <small>
+                    Activities
+                  </small>
+
+                  <strong>
+                    ${result.activities.toLocaleString()}
+                  </strong>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div className="result-total">
 
               <span>
                 Estimated total
@@ -492,121 +840,239 @@ export default function Home() {
 
             </div>
 
-          </div>
+          </section>
 
-          {result.maxBudget && (
 
-            <div
-              className={
-                result.difference > 0
-                  ? "budget-status over"
-                  : "budget-status under"
-              }
-            >
+          {/* OVER BUDGET */}
 
-              {result.difference > 0 ? (
-                <>
-                  ⚠️ This trip is approximately{" "}
-                  <strong>
-                    $
-                    {result.difference.toLocaleString()}
-                  </strong>{" "}
-                  over your budget.
-                </>
-              ) : (
-                <>
-                  ✓ You are approximately{" "}
-                  <strong>
-                    $
-                    {Math.abs(
-                      result.difference
-                    ).toLocaleString()}
-                  </strong>{" "}
-                  under your budget.
-                </>
-              )}
+          {isOverBudget && (
 
-            </div>
+            <section className="card">
+
+              <div className="section-title">
+
+                <div className="result-label">
+                  IF YOUR CURRENT PLAN IS OVER BUDGET
+                </div>
+
+                <h2>
+                  Ways to make the trip work
+                </h2>
+
+                <p>
+                  We can change one variable at a
+                  time instead of simply telling you
+                  to spend more.
+                </p>
+
+              </div>
+
+
+              {/* DESTINATION ALTERNATIVES */}
+
+              <div className="alternative-section">
+
+                <h3>
+                  Change destination
+                </h3>
+
+                <p>
+                  Keep your trip length and travel
+                  style, but explore destinations that
+                  may fit your budget better.
+                </p>
+
+
+                <div className="destination-grid">
+
+                  {alternativeDestinations.map(
+                    ({
+                      destination,
+                      estimate,
+                    }) => (
+
+                      <div
+                        className="destination-card"
+                        key={`${destination.country}-${destination.city}`}
+                      >
+
+                        <h3>
+                          {destination.city}
+                        </h3>
+
+                        <p>
+                          {destination.country}
+                        </p>
+
+                        <strong>
+                          $
+                          {estimate.total.toLocaleString()}
+                          {" "}estimated
+                        </strong>
+
+                        <small>
+                          {estimate.total <= budget
+                            ? `$${(
+                                budget -
+                                estimate.total
+                              ).toLocaleString()} possible remaining`
+                            : `Still about $${(
+                                estimate.total -
+                                budget
+                              ).toLocaleString()} over`}
+                        </small>
+
+                        <button
+                          className="secondary-button"
+                          onClick={() =>
+                            chooseDestination(
+                              destination
+                            )
+                          }
+                        >
+                          Explore{" "}
+                          {destination.city}
+                        </button>
+
+                      </div>
+
+                    )
+                  )}
+
+                </div>
+
+              </div>
+
+
+              {/* PLAN ALTERNATIVES */}
+
+              <div className="alternative-section">
+
+                <h3>
+                  Change your plan
+                </h3>
+
+                <p>
+                  Keep the destination and adjust
+                  the trip instead.
+                </p>
+
+
+                <div className="destination-grid">
+
+                  {/* SHORTER TRIP */}
+
+                  {days > 1 && (
+
+                    <div className="destination-card">
+
+                      <small>
+                        Shorter trip
+                      </small>
+
+                      <h3>
+                        {days - 1} days
+                      </h3>
+
+                      <p>
+                        Reduce the trip by one day.
+                      </p>
+
+                      <strong>
+                        New estimate
+                      </strong>
+
+                      <button
+                        className="secondary-button"
+                        onClick={
+                          chooseShorterTrip
+                        }
+                      >
+                        Try this option
+                      </button>
+
+                    </div>
+
+                  )}
+
+
+                  {/* CHEAPER STAY */}
+
+                  {style !== "Budget" && (
+
+                    <div className="destination-card">
+
+                      <small>
+                        Cheaper stay
+                      </small>
+
+                      <h3>
+                        Budget travel
+                      </h3>
+
+                      <p>
+                        Keep the same destination
+                        and dates with a lower-cost
+                        travel style.
+                      </p>
+
+                      <button
+                        className="secondary-button"
+                        onClick={
+                          chooseCheaperStyle
+                        }
+                      >
+                        Try this option
+                      </button>
+
+                    </div>
+
+                  )}
+
+
+                  {/* ADJUST BUDGET */}
+
+                  <div className="destination-card">
+
+                    <small>
+                      Adjust budget
+                    </small>
+
+                    <h3>
+                      ${budget.toLocaleString()}
+                    </h3>
+
+                    <p>
+                      Increase or decrease your
+                      budget using the controls above.
+                    </p>
+
+                    <button
+                      className="secondary-button"
+                      onClick={() =>
+                        window.scrollTo({
+                          top: 0,
+                          behavior: "smooth",
+                        })
+                      }
+                    >
+                      Adjust budget ↑
+                    </button>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </section>
 
           )}
 
-          <div className="breakdown-grid">
 
-            <div className="breakdown-item">
+          {/* ITINERARY */}
 
-              <span>🏨</span>
-
-              <div>
-
-                <small>
-                  Hotels
-                </small>
-
-                <strong>
-                  ${result.hotel.toLocaleString()}
-                </strong>
-
-              </div>
-
-            </div>
-
-            <div className="breakdown-item">
-
-              <span>🍜</span>
-
-              <div>
-
-                <small>
-                  Food
-                </small>
-
-                <strong>
-                  ${result.food.toLocaleString()}
-                </strong>
-
-              </div>
-
-            </div>
-
-            <div className="breakdown-item">
-
-              <span>🚆</span>
-
-              <div>
-
-                <small>
-                  Transport
-                </small>
-
-                <strong>
-                  ${result.transport.toLocaleString()}
-                </strong>
-
-              </div>
-
-            </div>
-
-            <div className="breakdown-item">
-
-              <span>🎟️</span>
-
-              <div>
-
-                <small>
-                  Activities
-                </small>
-
-                <strong>
-                  ${result.activities.toLocaleString()}
-                </strong>
-
-              </div>
-
-            </div>
-
-          </div>
-
-          <div className="itinerary">
+          <section className="result-card">
 
             <div className="result-label">
               SAMPLE ITINERARY
@@ -617,7 +1083,13 @@ export default function Home() {
             </h3>
 
             {result.itinerary
-              .slice(0, Math.min(days, result.itinerary.length))
+              .slice(
+                0,
+                Math.min(
+                  days,
+                  result.itinerary.length
+                )
+              )
               .map((item) => (
 
                 <div
@@ -650,63 +1122,65 @@ export default function Home() {
                 </strong>
 
                 <p>
-                  Continue exploring the destination,
-                  enjoy local experiences and keep some
-                  free time before departure.
+                  Continue exploring the
+                  destination, enjoy local
+                  experiences and keep some free
+                  time before departure.
                 </p>
 
               </div>
 
             )}
 
-          </div>
+          </section>
 
-          <div className="destination-info">
 
-            <div>
+          {/* DESTINATION INFO */}
 
-              <small>
-                Main airport
-              </small>
+          <section className="card">
 
-              <strong>
-                {result.airport}
-              </strong>
+            <div className="destination-info">
+
+              <div>
+
+                <small>
+                  Main airport
+                </small>
+
+                <strong>
+                  {result.airport}
+                </strong>
+
+              </div>
+
+              <div>
+
+                <small>
+                  Currency
+                </small>
+
+                <strong>
+                  {result.currency}
+                </strong>
+
+              </div>
+
+              <div>
+
+                <small>
+                  Recommended months
+                </small>
+
+                <strong>
+                  {result.bestMonths.join(", ")}
+                </strong>
+
+              </div>
 
             </div>
 
-            <div>
+          </section>
 
-              <small>
-                Currency
-              </small>
-
-              <strong>
-                {result.currency}
-              </strong>
-
-            </div>
-
-            <div>
-
-              <small>
-                Recommended months
-              </small>
-
-              <strong>
-                {result.bestMonths.join(", ")}
-              </strong>
-
-            </div>
-
-          </div>
-
-          <div className="future-note">
-
-            🚀 Soon: flight prices, hotels,
-            activities, eSIMs and travel insurance.
-
-          </div>
 
           <button
             className="secondary-button"
@@ -715,7 +1189,7 @@ export default function Home() {
             ← Plan another trip
           </button>
 
-        </section>
+        </>
 
       )}
 
