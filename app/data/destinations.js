@@ -4,7 +4,10 @@ export const destinations = [
     city: "Tokyo",
     currency: "JPY",
     airport: "NRT",
+
     bestMonths: ["March", "April", "October", "November"],
+
+    flightFromHCMC: 650,
 
     costs: {
       Budget: {
@@ -68,7 +71,10 @@ export const destinations = [
     city: "Paris",
     currency: "EUR",
     airport: "CDG",
+
     bestMonths: ["April", "May", "June", "September", "October"],
+
+    flightFromHCMC: 750,
 
     costs: {
       Budget: {
@@ -132,7 +138,10 @@ export const destinations = [
     city: "Seoul",
     currency: "KRW",
     airport: "ICN",
+
     bestMonths: ["April", "May", "September", "October"],
+
+    flightFromHCMC: 420,
 
     costs: {
       Budget: {
@@ -196,7 +205,10 @@ export const destinations = [
     city: "Bangkok",
     currency: "THB",
     airport: "BKK",
+
     bestMonths: ["November", "December", "January", "February"],
+
+    flightFromHCMC: 250,
 
     costs: {
       Budget: {
