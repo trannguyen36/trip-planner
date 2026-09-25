@@ -8,7 +8,7 @@ const MONTHS = [
   "February",
   "March",
   "April",
-  May,
+  "May",
   "June",
   "July",
   "August",
